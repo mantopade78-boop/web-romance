@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Do You Love Me?</title>
+    <style>
+      body {
+        margin: 0;
+        font-family: Arial, sans-serif;
+        overflow: hidden;
+      }
+
+      /* Background Gradient Animasi */
+      .bg,
+      .intro {
+        width: 100%;
+        height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+        background: linear-gradient(135deg, #ffafcc, #ffc8dd, #bde0fe, #cdb4db);
+        background-size: 400% 400%;
+        animation: gradientMove 10s ease infinite;
+      }
+      @keyframes gradientMove {
+        0% {
+          background-position: 0% 50%;
+        }
+        50% {
+          background-position: 100% 50%;
+        }
+        100% {
+          background-position: 0% 50%;
+        }
+      }
+
+      h1 {
+        margin-bottom: 30px;
+        color: #fff;
+        text-shadow: 2px 2px 6px rgba(0, 0, 0, 0.2);
+        text-align: center;
+      }
+
+      .btn {
+        padding: 12px 25px;
+        margin: 10px;
+        font-size: 18px;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: 0.2s;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+      }
+
+      #yes {
+        background: #ff4d6d;
+        color: #fff;
+      }
+      #yes:hover {
+        background: #e63950;
+      }
+
+      #no {
+        background: #6c757d;
+        color: #fff;
+        position: absolute;
+      }
+
+      .modal {
+        display: none;
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.6);
+        justify-content: center;
+        align-items: center;
+      }
+      .modal-content {
+        background: #fff;
+        padding: 25px;
+        border-radius: 12px;
+        text-align: center;
+        max-width: 460px;
+        width: 90%;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        animation: fadeIn 0.5s;
+      }
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: scale(0.8);
+        }
+        to {
+          opacity: 1;
+          transform: scale(1);
+        }
+      }
+      .close {
+        background: #f44336;
+        color: #fff;
+        border: none;
+        padding: 8px 15px;
+        margin-top: 20px;
+        border-radius: 8px;
+        cursor: pointer;
+      }
+
+      .particle {
+        position: fixed;
+        pointer-events: none;
+        font-size: 20px;
+        animation: floatUp 1s forwards;
+      }
+      @keyframes floatUp {
+        from {
+          transform: translateY(0);
+          opacity: 1;
+        }
+        to {
+          transform: translateY(-50px);
+          opacity: 0;
+        }
+      }
+
+      /* Intro Forms */
+      .form-card {
+        background: rgba(255, 255, 255, 0.9);
+        padding: 30px;
+        border-radius: 14px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+        width: 100%;
+        max-width: 420px;
+        text-align: center;
+      }
+      .form-card h2 {
+        margin-bottom: 20px;
+        color: #ff4d6d;
+      }
+      .form-group {
+        margin-bottom: 16px;
+        text-align: left;
+      }
+      .form-group label {
+        display: block;
+        margin-bottom: 6px;
+        font-weight: bold;
+        color: #333;
+      }
+      .form-group input,
+      .form-group select {
+        width: 100%;
+        padding: 10px 12px;
+        border: 1px solid #ccc;
+        border-radius: 8px;
+        font-size: 15px;
+      }
+      .form-card button {
+        background: #ff4d6d;
+        color: #fff;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 8px;
+        cursor: pointer;
+        font-size: 16px;
+        transition: background 0.2s;
+        margin-top: 10px;
+      }
+      .form-card button:hover {
+        background: #e63950;
+      }
+
+      /* Letter prettify */
+      #letterText {
+        text-align: left;
+        line-height: 1.65;
+        font-size: 16px;
+        color: #333;
+      }
+      #letterText h3 {
+        color: #ff4d6d;
+        margin: 0 0 10px;
+        text-align: center;
+      }
+      #letterText p {
+        margin: 0 0 12px;
+      }
+      #letterText ul {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+      }
+      #letterText li {
+        background: #fff0f5;
+        padding: 10px 14px;
+        margin: 6px 0;
+        border-radius: 10px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.08);
+      }
+      #letterText b {
+        color: #e63950;
+      }
+
+      /* Foto akhir full screen center */
+      #photoContainer {
+        display: none;
+        position: fixed;
+        inset: 0;
+        justify-content: center;
+        align-items: center;
+        background: rgba(0, 0, 0, 0.6);
+        z-index: 100;
+        flex-direction: column;
+      }
+      #finalPhoto {
+        max-width: 90%;
+        max-height: 90%;
+        border-radius: 12px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+        animation: fadeIn 1s;
+      }
+      #photoContainer button {
+        margin-top: 15px;
+        padding: 8px 20px;
+        font-size: 16px;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        background: #ff4d6d;
+        color: #fff;
+        transition: background 0.2s;
+      }
+      #photoContainer button:hover {
+        background: #e63950;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Musik -->
+    <audio id="bgMusic" loop>
+      <source src="musik/Intro.mp3" type="audio/mpeg" />
+    </audio>
+
+    <!-- Slide 1 -->
+    <div id="intro1" class="intro">
+      <div class="form-card">
+        <h2>Jawab dulu sebelum masuk</h2>
+        <div class="form-group">
+          <label for="q1">Apa makanan favorit kamu?</label>
+          <input type="text" id="q1" placeholder="Contoh: sate, pecel lele, bakso" />
+        </div>
+        <div class="form-group">
+          <label for="q2">Kalau aku ngajak jalan, kamu maunya kemana?</label>
+          <input type="text" id="q2" placeholder="Contoh: nonton, taman" />
+        </div>
+        <button id="nextBtn1">Lanjut ➡️</button>
+      </div>
+    </div>
+
+    <!-- Slide 2 -->
+    <div id="intro2" class="intro" style="display: none">
+      <div class="form-card">
+        <h2>Pertanyaan lanjut</h2>
+        <div class="form-group">
+          <label for="q3">Kamu lebih suka apa buat kencan pertama?</label>
+          <select id="q3">
+            <option value="">-- Pilih --</option>
+            <option value="makan bilung bareng">Makan Bilung</option>
+            <option value="jalan-jalan ke Jatinangor 🇬🇧">Jalan-jalan ke Jatinangor</option>
+            <option value="nonton film romantis 🎬">Nonton Film</option>
+          </select>
+        </div>
+        <button id="nextBtn2">Lanjut ➡️</button>
+      </div>
+    </div>
+
+    <!-- Slide 3 -->
+    <div id="intro3" class="intro" style="display: none">
+      <div class="form-card">
+        <h2>Dikit lagi selesai nih</h2>
+        <div class="form-group">
+          <label for="q4">Kalau aku nyanyi buat kamu, kamu mau lagu apa?</label>
+          <input type="text" id="q4" placeholder="Judul lagu / penyanyi" />
+        </div>
+        <div class="form-group">
+          <label for="q5">Kalau aku ngajak foto bareng, kamu mau pose apa?</label>
+          <select id="q5">
+            <option value="">-- Pilih pose --</option>
+            <option value="pose peace ✌️">Peace ✌️</option>
+            <option value="pose heart tangan ❤️">Heart tangan ❤️</option>
+            <option value="pose candid natural 📸">Candid natural 📸</option>
+            <option value="pose lucu 🤳">Pose lucu 🤳</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="q6">Kalau ada satu kota yang pengen kamu kunjungi, apa?</label>
+          <input type="text" id="q6" placeholder="Contoh: Tokyo, Paris, Bali" />
+        </div>
+        <button id="startBtn">Mulai</button>
+      </div>
+    </div>
+
+    <!-- Halaman utama -->
+    <div class="bg" id="mainPage" style="display: none; position: relative">
+      <h1>i can’t pretend anymore, i like you.<br />can we write our story together?</h1>
+      <button id="yes" class="btn">Yes</button>
+      <button id="no" class="btn">No, leave me alone 😅</button>
+
+      <!-- Foto akhir di tengah -->
+      <div id="photoContainer">
+        <img id="finalPhoto" src="image/img.png" alt="Our Photo" />
+        <button id="closePhotoBtn">Close</button>
+      </div>
+    </div>
+
+    <!-- Modal surat -->
+    <div id="loveLetter" class="modal">
+      <div class="modal-content">
+        <h2>💌 My Love Letter for You 💌</h2>
+        <div id="letterText"></div>
+        <button class="close">Close</button>
+      </div>
+    </div>
+
+    <script>
+      const bgMusic = document.getElementById("bgMusic");
+      const intro1 = document.getElementById("intro1");
+      const intro2 = document.getElementById("intro2");
+      const intro3 = document.getElementById("intro3");
+      const mainPage = document.getElementById("mainPage");
+      const nextBtn1 = document.getElementById("nextBtn1");
+      const nextBtn2 = document.getElementById("nextBtn2");
+      const startBtn = document.getElementById("startBtn");
+      const noBtn = document.getElementById("no");
+      const yesBtn = document.getElementById("yes");
+      const modal = document.getElementById("loveLetter");
+      const closeBtn = document.querySelector(".close");
+      const letterText = document.getElementById("letterText");
+      const photoContainer = document.getElementById("photoContainer");
+      const closePhotoBtn = document.getElementById("closePhotoBtn");
+      const answers = {};
+
+      function playMusic() {
+        if (bgMusic.paused) bgMusic.play().catch((err) => console.log("Autoplay blocked:", err));
+      }
+
+      nextBtn1.addEventListener("click", () => {
+        playMusic();
+        const q1 = document.getElementById("q1").value.trim();
+        const q2 = document.getElementById("q2").value.trim();
+        if (q1 && q2) {
+          answers.q1 = q1;
+          answers.q2 = q2;
+          intro1.style.display = "none";
+          intro2.style.display = "flex";
+        } else {
+          alert("Isi dulu dua-duanya ya ");
+        }
+      });
+
+      nextBtn2.addEventListener("click", () => {
+        const q3 = document.getElementById("q3").value;
+        if (q3) {
+          answers.q3 = q3;
+          intro2.style.display = "none";
+          intro3.style.display = "flex";
+        } else {
+          alert("Pilih salah satu dulu yaa ");
+        }
+      });
+
+      startBtn.addEventListener("click", () => {
+        const q4 = document.getElementById("q4").value.trim();
+        const q5 = document.getElementById("q5").value;
+        const q6 = document.getElementById("q6").value.trim();
+        if (q4 && q5 && q6) {
+          answers.q4 = q4;
+          answers.q5 = q5;
+          answers.q6 = q6;
+          intro3.style.display = "none";
+          mainPage.style.display = "flex";
+        } else {
+          alert("Lengkapi semuanya dulu ya ");
+        }
+      });
+
+      // NO kabur
+      noBtn.addEventListener("mouseenter", () => {
+        const x = Math.random() * (window.innerWidth - noBtn.offsetWidth);
+        const y = Math.random() * (window.innerHeight - noBtn.offsetHeight);
+        noBtn.style.left = `${x}px`;
+        noBtn.style.top = `${y}px`;
+      });
+
+      // YES -> surat dinamis
+      yesBtn.addEventListener("click", () => {
+        letterText.innerHTML = `
+      <div style="max-width:380px; margin:auto; padding:20px; background:#fff; border-radius:12px; box-shadow:0 2px 6px rgba(0,0,0,0.1); font-size:15px; line-height:1.6; color:#333;">
+        <p>
+          Hai Aull, aku catat sedikit tentang kamu. 
+          Kamu suka <b>${answers.q1}</b>, 
+          kalau diajak jalan lebih pilih <b>${answers.q2}</b>, 
+          rencana kencan pertama kamu maunya <b>${answers.q3}</b>. 
+          Lagu yang pengen kamu denger itu <b>${answers.q4}</b>, 
+          pose bareng kita nanti <b>${answers.q5}</b>, 
+          dan kota impianmu adalah <b>${answers.q6}</b>.
+        </p>
+        <p style="margin-top:10px;">Nanti kita wujudin satu-satu ya.</p>
+      </div>`;
+        modal.style.display = "flex";
+      });
+
+      // Close modal -> munculin foto
+      function closeModalAndShowPhoto() {
+        modal.style.display = "none";
+        photoContainer.style.display = "flex";
+      }
+
+      closeBtn.addEventListener("click", closeModalAndShowPhoto);
+      window.addEventListener("click", (e) => {
+        if (e.target === modal) closeModalAndShowPhoto();
+      });
+
+      // Close photo
+      closePhotoBtn.addEventListener("click", () => {
+        photoContainer.style.display = "none";
+      });
+
+      // Partikel love di cursor
+      document.addEventListener("mousemove", (e) => {
+        const particle = document.createElement("div");
+        particle.classList.add("particle");
+        particle.style.left = e.pageX + "px";
+        particle.style.top = e.pageY + "px";
+        particle.textContent = "💖";
+        document.body.appendChild(particle);
+        setTimeout(() => particle.remove(), 1000);
+      });
+    </script>
+  </body>
+</html>
